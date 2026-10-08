@@ -306,32 +306,56 @@ body.dark-theme .single-comment {
             darkModeToggle.innerHTML = '🌙 Dark Mode';
         }
     });
-    // --- KODI YA SEHEMU YA MAONI ---
+    // --- KODI YA MAONI YENYE LOCALSTORAGE ---
 
-// 1. Tafuta fomu ya maoni na sehemu ya kuonyeshea maoni
 const commentForm = document.getElementById('comment-form');
 const commentsDisplay = document.getElementById('comments-display');
 
-// 2. Sikiliza tukio la mteja anapobonyeza "Tuma Maoni"
+// 1. Kazi ya kupakua maoni yaliyohifadhiwa kila ukurasa unapofunguka (Refresh)
+function loadComments() {
+    // Chukua maoni kutoka LocalStorage, yakikosekana weka mabano tupu []
+    const savedComments = JSON.parse(localStorage.getItem('princess_comments')) || [];
+    
+    // Safisha kwanza eneo la kuonyeshea maoni (isipokuwa yale maoni ya mfano yaliyopo kwenye HTML)
+    const HTML_example = `<h4>Maoni yaliyowekwa:</h4>
+    <div class="single-comment">
+        <strong>Mgeni:</strong> Website yako ni nzuri sana! 😍
+    </div>`;
+    commentsDisplay.innerHTML = HTML_example;
+
+    // Pitia maoni yote yaliyohifadhiwa na uyaonyeshe chini ya ukurasa
+    savedComments.forEach(comment => {
+        const newComment = document.createElement('div');
+        newComment.classList.add('single-comment');
+        newComment.innerHTML = `<strong>${comment.name}:</strong> ${comment.text}`;
+        commentsDisplay.appendChild(newComment);
+    });
+}
+
+// 2. Kazi ya kuhifadhi maoni mapya mtumiaji anapobonyeza "Tuma Maoni"
 commentForm.addEventListener('submit', function(event) {
-    // Zuia ukurasa usijirejeshe upya (refresh) baada ya kubonyeza button
     event.preventDefault();
 
-    // 3. Chukua maadili yaliyoandikwa kwenye masanduku ya jina na maoni
     const nameInput = document.getElementById('comment-name').value;
     const textInput = document.getElementById('comment-text').value;
 
-    // 4. Tengeneza muundo mpya wa kisanduku cha maoni kwa ajili ya HTML
-    const newComment = document.createElement('div');
-    newComment.classList.add('single-comment');
-    newComment.innerHTML = `<strong>${nameInput}:</strong> ${textInput}`;
+    // Tengeneza kitu (object) chenye jina na ujumbe wa mteja
+    const currentComment = { name: nameInput, text: textInput };
 
-    // 5. Ongeza maoni haya mapya kwenye orodha ya maoni hapo chini
-    commentsDisplay.appendChild(newComment);
+    // Chukua maoni ya zamani, ongeza hili jipya, kisha weka yote upya kwenye LocalStorage
+    const savedComments = JSON.parse(localStorage.getItem('princess_comments')) || [];
+    savedComments.push(currentComment);
+    localStorage.setItem('princess_comments', JSON.stringify(savedComments));
 
-    // 6. Safisha masanduku ya fomu ili yawe wazi kwa ajili ya mtu mwingine
+    // Pakua upya maoni ili yajionyeshe kwenye skrini mara moja
+    loadComments();
+
+    // Safisha fomu ya maandishi
     commentForm.reset();
 });
+
+// 3. Washa kazi ya kupakua maoni mara tu ukurasa unapomaliza kufunguka
+loadComments();
 
 </script>
 
