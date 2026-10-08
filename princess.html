@@ -158,6 +158,25 @@ body.dark-theme {
     background: #1a1a1a !important;
     color: #ffffff !important;
 }
+body.dark-theme .container a {
+    background-color: #22222a; /* Rangi ya giza ya ndani ya sanduku */
+    color: #ffb6c1;            /* Rangi ya pinki ya Princess kwa ajili ya maandishi ya viungo */
+    border: 2px solid #ffb6c1;  /* Mstari wa pembeni wa sanduku kuleta muonekano mzuri */
+    padding: 14px;             /* Nafasi ya ndani ya sanduku */
+    border-radius: 8px;        /* Kupinda kidogo kwa pembe za masanduku */
+    text-decoration: none;     /* Kutoa ule mstari wa chini wa viungo vya kawaida */
+    display: block;            /* Kufanya kiungo kijae kama sanduku */
+    margin: 12px 0;            /* Nafasi kati ya sanduku moja na jingine */
+    transition: all 0.3s ease; /* Kuweka ulaini wakati wa kugusa (hover) */
+}
+
+/* Na hii hapa chini ni ile athari wakati mtu anapoweka kipanya juu ya sanduku (Hover) */
+body.dark-theme .container a:hover {
+    background-color: #ffb6c1; /* Sanduku linabadilika na kujaa rangi ya pinki */
+    color: #121212;            /* Maandishi yanakuwa meusi ili yasomeke vizuri sana */
+    transform: scale(1.02);    /* Sanduku linajiongeza ukubwa kidogo kwa mbali */
+}
+
 
     </style>
 </head>
