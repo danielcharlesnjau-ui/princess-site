@@ -176,6 +176,74 @@ body.dark-theme .container a:hover {
     color: #121212;            /* Maandishi yanakuwa meusi ili yasomeke vizuri sana */
     transform: scale(1.02);    /* Sanduku linajiongeza ukubwa kidogo kwa mbali */
 }
+/* Staili ya Sehemu ya Maoni ya Kawaida (Light Mode) */
+.comment-section {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 30px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: left;
+}
+
+.comment-section h3, .comment-section h4 {
+    color: #333;
+}
+
+#comment-form input, #comment-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#comment-form button {
+    background-color: #ffb6c1; /* Rangi ya pinki ya Princess */
+    color: #121212;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    transition: 0.3s;
+}
+
+#comment-form button:hover {
+    background-color: #e5a4ae;
+}
+
+.single-comment {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    border-left: 4px solid #ffb6c1;
+    color: #333;
+}
+
+/* --- MABADILIKO YA DARK MODE (Ili sehemu ya maoni isififie kwenye giza) --- */
+body.dark-theme .comment-section {
+    background-color: #22222a; /* Rangi ile ile ya giza ya masanduku yetu */
+    box-shadow: none;
+}
+
+body.dark-theme .comment-section h3, body.dark-theme .comment-section h4 {
+    color: #ffffff;
+}
+
+body.dark-theme #comment-form input, body.dark-theme #comment-form textarea {
+    background-color: #1a1a1f;
+    color: #ffffff;
+    border: 1px solid #ffb6c1;
+}
+
+body.dark-theme .single-comment {
+    background-color: #1a1a1f;
+    color: #ffffff;
+}
 
 
     </style>
@@ -205,6 +273,24 @@ body.dark-theme .container a:hover {
 
         <div class="footer-text">PRINCESS PIXIE</div>
     </div>
+    <!-- Sehemu ya Maoni -->
+<div class="comment-section">
+    <h3>Acha Maoni Yako Hapa 🌸</h3>
+    <form id="comment-form">
+        <input type="text" id="comment-name" placeholder="Jina lako..." required>
+        <textarea id="comment-text" rows="4" placeholder="Andika maoni yako hapa..." required></textarea>
+        <button type="submit">Tuma Maoni</button>
+    </form>
+    
+    <!-- Hapa ndipo maoni mapya yatakapojitokeza baada ya kutumwa -->
+    <div id="comments-display">
+        <h4>Maoni yaliyowekwa:</h4>
+        <div class="single-comment">
+            <strong>Mgeni:</strong> Website yako ni nzuri sana! 😍
+        </div>
+    </div>
+</div>
+
 <!-- Kodi ya JavaScript ya Dark Mode -->
 <script>
     const darkModeToggle = document.getElementById('dark-mode-toggle');
@@ -220,6 +306,33 @@ body.dark-theme .container a:hover {
             darkModeToggle.innerHTML = '🌙 Dark Mode';
         }
     });
+    // --- KODI YA SEHEMU YA MAONI ---
+
+// 1. Tafuta fomu ya maoni na sehemu ya kuonyeshea maoni
+const commentForm = document.getElementById('comment-form');
+const commentsDisplay = document.getElementById('comments-display');
+
+// 2. Sikiliza tukio la mteja anapobonyeza "Tuma Maoni"
+commentForm.addEventListener('submit', function(event) {
+    // Zuia ukurasa usijirejeshe upya (refresh) baada ya kubonyeza button
+    event.preventDefault();
+
+    // 3. Chukua maadili yaliyoandikwa kwenye masanduku ya jina na maoni
+    const nameInput = document.getElementById('comment-name').value;
+    const textInput = document.getElementById('comment-text').value;
+
+    // 4. Tengeneza muundo mpya wa kisanduku cha maoni kwa ajili ya HTML
+    const newComment = document.createElement('div');
+    newComment.classList.add('single-comment');
+    newComment.innerHTML = `<strong>${nameInput}:</strong> ${textInput}`;
+
+    // 5. Ongeza maoni haya mapya kwenye orodha ya maoni hapo chini
+    commentsDisplay.appendChild(newComment);
+
+    // 6. Safisha masanduku ya fomu ili yawe wazi kwa ajili ya mtu mwingine
+    commentForm.reset();
+});
+
 </script>
 
 </body>
