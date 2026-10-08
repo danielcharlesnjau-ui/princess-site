@@ -293,71 +293,76 @@ body.dark-theme .single-comment {
 
 <!-- Kodi ya JavaScript ya Dark Mode -->
 <script>
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
-    
+   // --- 1. KODI YA KUBADILISHA DARK MODE ---
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+if (darkModeToggle) {
     darkModeToggle.addEventListener('click', () => {
-        // Hapa tunaambia website iongeze au iondoe mtindo wa 'dark-theme' kwenye body
         document.body.classList.toggle('dark-theme');
         
-        // Hapa tunabadilisha maandishi ya kitufe kulingana na muonekano uliopo
+        // Kubadilisha maandishi ya kitufe kulingana na muonekano
         if (document.body.classList.contains('dark-theme')) {
             darkModeToggle.innerHTML = '☀️ Light Mode';
         } else {
             darkModeToggle.innerHTML = '🌙 Dark Mode';
         }
     });
-    // --- KODI YA MAONI YENYE LOCALSTORAGE ---
+}
 
+// --- 2. KODI YA SEHEMU YA MAONI (YENYE LOCALSTORAGE & GOOGLE ANALYTICS) ---
 const commentForm = document.getElementById('comment-form');
 const commentsDisplay = document.getElementById('comments-display');
 
-// 1. Kazi ya kupakua maoni yaliyohifadhiwa kila ukurasa unapofunguka (Refresh)
+// Kazi ya kupakua maoni kila baada ya ku-refresh
 function loadComments() {
-    // Chukua maoni kutoka LocalStorage, yakikosekana weka mabano tupu []
     const savedComments = JSON.parse(localStorage.getItem('princess_comments')) || [];
-    
-    // Safisha kwanza eneo la kuonyeshea maoni (isipokuwa yale maoni ya mfano yaliyopo kwenye HTML)
     const HTML_example = `<h4>Maoni yaliyowekwa:</h4>
     <div class="single-comment">
         <strong>Mgeni:</strong> Website yako ni nzuri sana! 😍
     </div>`;
-    commentsDisplay.innerHTML = HTML_example;
+    
+    if (commentsDisplay) {
+        commentsDisplay.innerHTML = HTML_example;
+        savedComments.forEach(comment => {
+            const newComment = document.createElement('div');
+            newComment.classList.add('single-comment');
+            newComment.innerHTML = `<strong>${comment.name}:</strong> ${comment.text}`;
+            commentsDisplay.appendChild(newComment);
+        });
+    }
+}
 
-    // Pitia maoni yote yaliyohifadhiwa na uyaonyeshe chini ya ukurasa
-    savedComments.forEach(comment => {
-        const newComment = document.createElement('div');
-        newComment.classList.add('single-comment');
-        newComment.innerHTML = `<strong>${comment.name}:</strong> ${comment.text}`;
-        commentsDisplay.appendChild(newComment);
+// Kazi ya kusikiliza fomu ikitumwa
+if (commentForm) {
+    commentForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // 🚀 Tuma tukio kwenda Google Analytics
+        if (typeof gtag === 'function') {
+            gtag('event', 'tuma_maoni_click', {
+                'event_category': 'Engagement',
+                'event_label': 'Kitufe cha Maoni cha Princess'
+            });
+            console.log('Tukio la maoni limetumwa Google Analytics! 🎉');
+        }
+
+        // 💾 Hifadhi kwenye LocalStorage
+        const nameInput = document.getElementById('comment-name').value;
+        const textInput = document.getElementById('comment-text').value;
+        const currentComment = { name: nameInput, text: textInput };
+
+        const savedComments = JSON.parse(localStorage.getItem('princess_comments')) || [];
+        savedComments.push(currentComment);
+        localStorage.setItem('princess_comments', JSON.stringify(savedComments));
+
+        loadComments();
+        commentForm.reset();
     });
 }
 
-// 2. Kazi ya kuhifadhi maoni mapya mtumiaji anapobonyeza "Tuma Maoni"
-commentForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    const nameInput = document.getElementById('comment-name').value;
-    const textInput = document.getElementById('comment-text').value;
-
-    // Tengeneza kitu (object) chenye jina na ujumbe wa mteja
-    const currentComment = { name: nameInput, text: textInput };
-
-    // Chukua maoni ya zamani, ongeza hili jipya, kisha weka yote upya kwenye LocalStorage
-    const savedComments = JSON.parse(localStorage.getItem('princess_comments')) || [];
-    savedComments.push(currentComment);
-    localStorage.setItem('princess_comments', JSON.stringify(savedComments));
-
-    // Pakua upya maoni ili yajionyeshe kwenye skrini mara moja
-    loadComments();
-
-    // Safisha fomu ya maandishi
-    commentForm.reset();
-});
-
-// 3. Washa kazi ya kupakua maoni mara tu ukurasa unapomaliza kufunguka
+// Pakua maoni mara ukurasa unapofunguka
 loadComments();
 
-</script>
+ </script>
 
 </body>
 </html>
